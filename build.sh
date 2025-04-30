@@ -1,24 +1,60 @@
 #!/bin/bash
 
-platforms=("linux/amd64" "windows/amd64" "darwin/arm64")
-workspaceDirectory="/workspaces/Chat"
-src="$workspaceDirectory/src"
-bin="$workspaceDirectory/bin"
+# MARK: Arguments =============================================================
 
-# MARK: LINUX
-GOOS=linux 
-GOARCH=amd64
-go build -C ${src} -o ${bin}/${GOOS}/${GOARCH}/chat .
+# help message
+USAGE="usage: $0 [path=bin]"
+if [ "$#" -gt 1 ]; then echo "$USAGE" && exit 1; fi
 
-GOARCH=arm64
-go build -C ${src} -o ${bin}/${GOOS}/${GOARCH}/chat .
+SRC="$(dirname "$0")/src" # the source path
+BIN="${1:-bin}" # the binaries path
+EXEC="chat" # the executable
+out="$BIN/$EXEC" # the output path
 
-# MARK: MAC OS
-GOOS=darwin 
-GOARCH=arm64
-go build -C ${src} -o ${bin}/${GOOS}/${GOARCH}/chat .
+# MARK: Build =================================================================
 
-#MARK: WINDOWS
-GOOS=windows 
-GOARCH=amd64
-go build -C ${src} -o ${bin}/${GOOS}/${GOARCH}/chat.exe .
+# build for a plat-arch and package it
+build() { # usage: build <plat> <arch> <id>
+  plat="$1"; arch="$2";
+  id="$1-$2"
+  output="$out"
+
+  # add .exe for windows
+  if [ "$plat" = "windows" ]; then
+    output="$output.exe"
+  fi
+
+  # build the executable
+  echo "building for $id..."
+  GOOS=$plat GOARCH=$arch go build -C "$SRC" -o "../$output" .
+
+  # package into an archive
+  archive="$out-$id.zip"
+  zip -j "$archive" "$output" > /dev/null
+}
+
+# MARK: Targets ===============================================================
+
+# linux
+build linux arm64
+build linux amd64
+
+# macos
+build darwin arm64
+build darwin amd64
+
+# windows
+build windows arm64
+build windows amd64
+
+# development
+echo "building for debug..."
+if [ "$(go env GOOS)" = "windows" ]; then
+  go build -C "$SRC" -tags=debug -o "../$out.exe" .
+  rm "$out"
+else # macos | linux
+  go build -C "$SRC" -tags=debug -o "../$out" .
+  rm "$out.exe"
+fi
+
+echo "builds created in $BIN"
