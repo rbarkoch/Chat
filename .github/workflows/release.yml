@@ -1,0 +1,56 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        type: boolean
+        description: "Upload artifacts without a release."
+        required: false
+        default: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      DRY_RUN: ${{ github.event.inputs.dry_run }}
+
+    steps:
+      - if: env.DRY_RUN == "true"
+        run: echo "::warning::Dry Run!"
+
+      # 1) Clone the repository
+      - name: Checkout repository
+        uses: actions/checkout@main
+        with:
+          fetch-depth: 0 # shallow clone
+
+      # 2) Set up Go for the build script
+      - name: Set up Go
+        uses: actions/setup-go@main
+
+      # 3) Run the build scripts
+      - name: Build executables
+        run: |
+          chmod +x build.sh
+          build.sh bin
+
+      # 4) Dry run: upload artifacts instead of releasing
+      - name: Upload build artifacts (dry run)
+        if: env.DRY_RUN == "true" # for debugging only
+        uses: actions/upload-artifact@main
+        with:
+          name: build-artifacts
+          path: bin/*
+
+      # 4) Create a GitHub Release and upload build files
+      - name: Create GitHub Release
+        if: env.DRY_RUN != "true"
+        uses: softprops/action-gh-release@master
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: bin/*.zip
+          generate_release_notes: true
