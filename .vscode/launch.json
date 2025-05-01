@@ -9,6 +9,7 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
+            "envFile": "${workspaceFolder}/.env",
             "program": "${workspaceFolder}/src",
             "args": ["Hello, World!"]
         },
