@@ -73,6 +73,12 @@ func MergeConfigurations(cfgs []Configuration) Configuration {
 
 	for _, cfg := range cfgs {
 		for k, v := range cfg.values {
+
+			_, exists := merged.values[k]
+			if exists {
+				// If we already have a key, skip because we have higher priority.
+				continue
+			}
 			merged.values[k] = v
 		}
 	}
