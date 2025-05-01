@@ -6,10 +6,13 @@
 USAGE="usage: $0 [path=bin]"
 if [ "$#" -gt 1 ]; then echo "$USAGE" && exit 1; fi
 
-SRC="$(dirname "$0")/src" # the source path
+# the directory containing this script (and the docs)
+SCRIPT_DIR="$(dirname "$0")"
+SRC="$SCRIPT_DIR/src" # the source path
 BIN="${1:-bin}" # the binaries path
 EXEC="chat" # the executable
 out="$BIN/$EXEC" # the output path
+
 
 # MARK: Build =================================================================
 
@@ -30,7 +33,10 @@ build() { # usage: build <plat> <arch> <id>
 
   # package into an archive
   archive="$out-$id.zip"
-  zip -j "$archive" "$output" > /dev/null
+  zip -j "$archive" \
+    "$output" \
+    "$SCRIPT_DIR/CREDITS.md" \
+    "$SCRIPT_DIR/LICENSE" > /dev/null
 }
 
 # MARK: Targets ===============================================================
