@@ -1,4 +1,4 @@
-package main
+package clargs
 
 import (
 	"flag"

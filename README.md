@@ -27,7 +27,9 @@ Prompt with file context. Can be limited to single line or range.
 `chat -f code.c:38-45 "Explain this function."`
 
 ## Options
-Command line options can be provided to modify the behavior of Chat. Command line options ALWAYS override configuration. See the "Configuration" section below to understand how configuration works.
+Command line options can be provided to modify the behavior of Chat. Command
+line options ALWAYS override configuration. See the "Configuration" section
+below to understand how configuration works.
 
 | Option | Description|
 | :-- | :-- |
@@ -38,46 +40,62 @@ Command line options can be provided to modify the behavior of Chat. Command lin
 | `-s <prompt>` | System prompt to use. |
 
 ## Configuration
-A configuration can be provided to set defaults for the model, system prompt, and API key. Configuration can be created as a combination of global and local configurations.
+A configuration can be provided to set defaults for the model, system prompt,
+and API key. Configuration can be created as a combination of global and local
+configurations.
 
 ### Global Configuration
-The global configuration should be placed in `<HOME>/.chatconfig` where `<HOME>` is the users home directory.
+The global configuration should be placed in `<HOME>/.chatconfig` where `<HOME>`
+is the users home directory.
 
 - **Windows**: `%USERPROFILE%`
 - **Mac OS**: `$HOME` or `~`
 - **Linux**: `$HOME` or `~`
 
 ### Local Configuration
-A `.chatconfig` file can be placed in any directory. Chat will automatically merge all configurations found in the current working directory and all parent directories. The closer the configuration is to the working directory, the more priority it will have (overwriting keys from lower priority configurations.)
+A `.chatconfig` file can be placed in any directory. Chat will automatically
+merge all configurations found in the current working directory and all parent
+directories. The closer the configuration is to the working directory, the more
+priority it will have (overwriting keys from lower priority configurations.)
 
 The global configuration is always loaded last with the least priority.
 
 ### Configuration File
 
-The `.chatconfig` file should be a simple text file with a `KEY=VALUE` pair per line. The following configuration options are currently available:
+The `.chatconfig` file should be a simple text file with a `KEY=VALUE` pair per
+line. The following configuration options are currently available:
 
 | Option | Description|
 | :-- | :-- |
-| `OPENAI_API_KEY` | OpenAI API key. |
-| `MODEL` | Model to use. |
-| `SYSTEM_PROMPT` | System prompt to use. |
+| `CHAT_API_KEY` | OpenAI API key. |
+| `CHAT_MODEL` | Model to use. |
+| `CHAT_SYSTEM_PROMPT` | System prompt to use. |
 
-#### Example Configuraiton File
+#### Example Configuration File
 ```
-OPENAI_API_KEY=<API Key>
-MODEL=4o-mini
-SYSTEM_PROMPT=You are a command line assistant. You answer questions and response in single line responses if possible.
+CHAT_API_KEY=<API Key>
+CHAT_MODEL=4o-mini
+CHAT_SYSTEM_PROMPT=You are a command line assistant. You answer questions and response in single line responses if possible.
 ```
+
+### Environment Variable Configuration
+
+All configuration keys can also be set as environment variables. Configuration
+from environment variables will have the least priority.
 
 ## Installation
 
 ### Portable
-Chat is a single file executable and is fully self-contained. You can place the binary on a USB-stick or wherever you want to run it from and call the executable.
+Chat is a single file executable and is fully self-contained. You can place the
+binary on a USB-stick or wherever you want to run it from and call the
+executable.
 
 ### Windows
-Download the `chat.exe` binary and place in a location of your choice. For example `C:\Program Files\Chat\chat.exe`. Then add the directory to your path.
+Download the `chat.exe` binary and place in a location of your choice. For
+example `C:\Program Files\Chat\chat.exe`. Then add the directory to your path.
 
 ### Mac OS or Linux
-Download the `chat` binary and place it in `/usr/local/bin`. Then make the binary exectuable by calling: 
+Download the `chat` binary and place it in `/usr/local/bin`. Then make the
+binary exectuable by calling: 
 
 `chmod +x /usr/local/bin/chat`
