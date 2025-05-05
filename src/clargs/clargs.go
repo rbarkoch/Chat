@@ -44,7 +44,7 @@ chat [<options>] <prompt>
 	flag.StringVar(&clArgs.ApiKey, "k", "", "OpenAI API key.")
 	flag.StringVar(&clArgs.Model, "m", "", "OpenAI model to use.")
 	flag.StringVar(&clArgs.SystemPrompt, "s", "", "System prompt to provide to the model.")
-	flag.StringVar(&clArgs.File, "f", "", "A file provided to the model as context. Can also include line specifiers such as <file path>:300 or <file path>:300-400.")
+	flag.StringVar(&clArgs.File, "f", "", "A file provided to the model as context. Can also include line specifiers such as <file path>:300 or <file path>:300-400. Can include multiple file paths separated by commas (,).")
 	flag.BoolVar(&clArgs.Help, "h", false, "Prints help text.")
 
 	// Parse the flags from the provided args slice
