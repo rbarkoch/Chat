@@ -41,7 +41,7 @@ chat [<options>] <prompt>
 
 	clArgs := CommandLineArgs{}
 
-	flag.StringVar(&clArgs.Model, "k", "", "OpenAI API key.")
+	flag.StringVar(&clArgs.ApiKey, "k", "", "OpenAI API key.")
 	flag.StringVar(&clArgs.Model, "m", "", "OpenAI model to use.")
 	flag.StringVar(&clArgs.SystemPrompt, "s", "", "System prompt to provide to the model.")
 	flag.StringVar(&clArgs.File, "f", "", "A file provided to the model as context. Can also include line specifiers such as <file path>:300 or <file path>:300-400.")
