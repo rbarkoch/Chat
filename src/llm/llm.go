@@ -19,7 +19,7 @@ type ChatRequest struct {
 	Prompt       string
 	SystemPrompt string
 	Model        string
-	FileContents string
+	FileContents []string
 }
 
 type ChatResponse struct {
@@ -44,8 +44,8 @@ func Chat(request ChatRequest) (ChatResponse, error) {
 
 	messages = append(messages, openai.UserMessage(request.Prompt))
 
-	if request.FileContents != "" {
-		messages = append(messages, openai.UserMessage(fmt.Sprintf("```%s```", request.FileContents)))
+	for _, fileContents := range request.FileContents {
+		messages = append(messages, openai.UserMessage(fmt.Sprintf("```%s```", fileContents)))
 	}
 
 	params := openai.ChatCompletionNewParams{
@@ -89,12 +89,17 @@ func ConstructChatRequest(commandLineArguments clargs.CommandLineArgs, configura
 	chatRequest.Prompt = commandLineArguments.Prompt
 
 	if commandLineArguments.File != "" {
-		fileContents, err := readFile(commandLineArguments.File)
-		if err != nil {
-			return ChatRequest{}, fmt.Errorf("error reading file: %s", err)
-		}
+		filePaths := strings.Split(commandLineArguments.File, ",")
 
-		chatRequest.FileContents = fileContents
+		for _, filePath := range filePaths {
+			filePath = strings.TrimSpace(filePath)
+			fileContents, err := readFile(filePath)
+			if err != nil {
+				return ChatRequest{}, fmt.Errorf("error reading file: %s", err)
+			}
+
+			chatRequest.FileContents = append(chatRequest.FileContents, fileContents)
+		}
 	}
 
 	// Validate the chat request.

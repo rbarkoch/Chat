@@ -26,6 +26,10 @@ Prompt with file context. Can be limited to single line or range.
 `chat -f code.c:25 "Explain this line of code."`  
 `chat -f code.c:38-45 "Explain this function."`
 
+Prompt with multiple files.
+
+`chat -f code.c:38-45,module.c "Summarize the code provided."`
+
 ## Options
 Command line options can be provided to modify the behavior of Chat. Command
 line options ALWAYS override configuration. See the "Configuration" section
@@ -35,7 +39,7 @@ below to understand how configuration works.
 | :-- | :-- |
 | `-h` | Shows help text. |
 | `-k` | OpenAI API key. Required if not provided in configuration. |
-| `-f <path>[:<start>[-<end>]]` | Add a file or part of a file as context. |
+| `-f <path>[:<start>[-<end>]]` | Add a one or more files or part of a file as context. File paths are separated by commas (`,`). |
 | `-m <model>` | Model to use. |
 | `-s <prompt>` | System prompt to use. |
 
