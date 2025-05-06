@@ -19,7 +19,7 @@ jobs:
       DRY_RUN: ${{ github.event.inputs.dry_run }}
 
     steps:
-      - if: env.DRY_RUN == "true"
+      - if: env.DRY_RUN == 'true'
         run: echo "::warning::Dry Run!"
 
       # 1) Clone the repository
@@ -40,7 +40,7 @@ jobs:
 
       # 4) Dry run: upload artifacts instead of releasing
       - name: Upload build artifacts (dry run)
-        if: env.DRY_RUN == "true" # for debugging only
+        if: env.DRY_RUN == 'true' # for debugging only
         uses: actions/upload-artifact@main
         with:
           name: build-artifacts
@@ -48,7 +48,7 @@ jobs:
 
       # 4) Create a GitHub Release and upload build files
       - name: Create GitHub Release
-        if: env.DRY_RUN != "true"
+        if: env.DRY_RUN != 'true'
         uses: softprops/action-gh-release@master
         with:
           tag_name: ${{ github.ref_name }}
