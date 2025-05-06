@@ -10,6 +10,7 @@ const (
 	ConfigKeyModel        = "CHAT_MODEL"
 	ConfigKeyApiKey       = "CHAT_API_KEY"
 	ConfigKeySystemPrompt = "CHAT_SYSTEM_PROMPT"
+	ConfigWebSearch       = "CHAT_WEB_SEARCH"
 )
 
 // Configuration holds key/value pairs loaded from a file.

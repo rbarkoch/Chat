@@ -6,6 +6,7 @@ import (
 	"chat/utils"
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/openai/openai-go"
@@ -19,6 +20,7 @@ type ChatRequest struct {
 	Prompt       string
 	SystemPrompt string
 	Model        string
+	WebSearch    bool
 	FileContents []string
 }
 
@@ -31,21 +33,33 @@ func Chat(request ChatRequest) (ChatResponse, error) {
 	client := openai.NewClient(option.WithAPIKey(request.ApiKey))
 	ctx := context.Background()
 
-	// User Prompt
+	// User prompt.
 	var messages responses.ResponseInputParam
 	messages = append(messages, createUserMessage(request.Prompt))
 
-	// File Contents
+	// File contents.
 	for _, fileContents := range request.FileContents {
 		messages = append(messages, createUserMessage(fmt.Sprintf("```%s```", fileContents)))
 	}
 
+	// Web search.
+	tools := []responses.ToolUnionParam{}
+	if request.WebSearch {
+		tools = append(tools, responses.ToolUnionParam{
+			OfWebSearch: &responses.WebSearchToolParam{
+				Type: responses.WebSearchToolTypeWebSearchPreview,
+			},
+		})
+	}
+
+	// Construct parameters.
 	params := responses.ResponseNewParams{
 		Model:        utils.StringOrDefault(request.Model, openai.ChatModelGPT4oMini),
 		Instructions: param.Opt[string]{Value: request.SystemPrompt},
 		Input: responses.ResponseNewParamsInputUnion{
 			OfInputItemList: messages,
 		},
+		Tools: tools,
 	}
 
 	// Call API.
@@ -70,11 +84,13 @@ func ConstructChatRequest(commandLineArguments clargs.CommandLineArgs, configura
 	chatRequest.ApiKey = configuration.Get(config.ConfigKeyApiKey)
 	chatRequest.Model = configuration.Get(config.ConfigKeyModel)
 	chatRequest.SystemPrompt = configuration.Get(config.ConfigKeySystemPrompt)
+	chatRequest.WebSearch, _ = strconv.ParseBool(configuration.Get(config.ConfigWebSearch))
 
 	// Override with command line arguments if provided.
 	chatRequest.ApiKey = utils.StringOrDefault(commandLineArguments.ApiKey, chatRequest.ApiKey)
 	chatRequest.Model = utils.StringOrDefault(commandLineArguments.Model, chatRequest.Model)
 	chatRequest.SystemPrompt = utils.StringOrDefault(commandLineArguments.SystemPrompt, chatRequest.SystemPrompt)
+	chatRequest.WebSearch = commandLineArguments.WebSearch || chatRequest.WebSearch
 
 	// Set the rest of the values.
 

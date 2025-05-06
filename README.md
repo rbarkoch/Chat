@@ -10,6 +10,7 @@ requiring opening a browser.
 - Global configuration or per-directory configuration.
 - Provide a file or part of a file as context.
 - Override configuration through command line arguments.
+- Allows a web search as part of the query with `-w`.
 
 ## Usage and Examples
 Usage:
@@ -39,9 +40,10 @@ below to understand how configuration works.
 | :-- | :-- |
 | `-h` | Shows help text. |
 | `-k` | OpenAI API key. Required if not provided in configuration. |
-| `-f <path>[:<start>[-<end>]]` | Add a one or more files or part of a file as context. File paths are separated by commas (`,`). |
+| `-f <path>[:<start>[-<end>]]` | Add one or more files or part of a file as context. File paths are separated by commas (`,`). |
 | `-m <model>` | Model to use. |
 | `-s <prompt>` | System prompt to use. |
+| `-w` | Allows the model to perform a web search as part of its query. |
 
 ## Configuration
 A configuration can be provided to set defaults for the model, system prompt,
@@ -69,17 +71,19 @@ The global configuration is always loaded last with the least priority.
 The `.chatconfig` file should be a simple text file with a `KEY=VALUE` pair per
 line. The following configuration options are currently available:
 
-| Option | Description|
-| :-- | :-- |
-| `CHAT_API_KEY` | OpenAI API key. |
-| `CHAT_MODEL` | Model to use. |
-| `CHAT_SYSTEM_PROMPT` | System prompt to use. |
+| Option               | Description                                               |
+| :--                  | :--                                                       |
+| `CHAT_API_KEY`       | OpenAI API key.                                           |
+| `CHAT_MODEL`         | Model to use.                                             |
+| `CHAT_SYSTEM_PROMPT` | System prompt to use.                                     |
+| `CHAT_WEB_SEARCH`    | Enable web search tool (true/false).                      |
 
 #### Example Configuration File
 ```
 CHAT_API_KEY=<API Key>
 CHAT_MODEL=4o-mini
 CHAT_SYSTEM_PROMPT=You are a command line assistant. You answer questions and response in single line responses if possible.
+CHAT_WEB_SEARCH=true
 ```
 
 ### Environment Variable Configuration
