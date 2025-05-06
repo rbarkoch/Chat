@@ -17,12 +17,14 @@ type Configuration struct {
 	values map[string]string
 }
 
+// Constructs a new empty configuration.
 func New() Configuration {
 	return Configuration{
 		values: make(map[string]string),
 	}
 }
 
+// Adds a key to the configuration.
 func (cfg *Configuration) Add(key string, value string) {
 	cfg.values[key] = value
 }
@@ -32,7 +34,7 @@ func (cfg *Configuration) Get(key string) string {
 	return cfg.values[key]
 }
 
-// Reads a configuration file.
+// Reads a configuration file. Configuration files should be simple KEY=VALUE files.
 func ConfigurationFromFile(path string) (Configuration, error) {
 	file, err := os.Open(path)
 	if err != nil {
