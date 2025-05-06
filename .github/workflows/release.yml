@@ -35,8 +35,9 @@ jobs:
       # 3) Run the build scripts
       - name: Build executables
         run: |
-          chmod +x build.sh
-          build.sh bin
+          pwd && ls -la
+          chmod +x ./build.sh
+          ./build.sh bin
 
       # 4) Dry run: upload artifacts instead of releasing
       - name: Upload build artifacts (dry run)
